@@ -5,7 +5,12 @@ from bs4 import BeautifulSoup
 from utils import load_selenium
 
 
-def load_website():
+def load_csv():
+    df = pd.read_csv("https://raw.githubusercontent.com/apurvabanka/Data-Analysis---Food-Delivery-Dataset/refs/heads/main/src/train.csv")
+    return df
+
+
+def load_website(progress_bar, status_text):
     df_list = []
     url_list = [
         "https://ritik1129.github.io/Food_Delivery_Dataset/",
@@ -13,14 +18,20 @@ def load_website():
         "https://ritik1129.github.io/Food_Delivery_Dataset/location_details_table"
     ]
 
+    current_progress = 10
+
+    progress_bar.progress(current_progress)
+
     print("################################################")
     print("Starting to Laod Website")
+    status_text.text("Starting to Laod Website")
     print("################################################")
 
 
     for url in url_list:
         print("################################################")
         print("Processing URL - ", url)
+        status_text.text("Processing URL - " + url)
         print("################################################")
 
         driver = load_selenium(url)
@@ -43,6 +54,11 @@ def load_website():
 
         driver.quit()
         df_list.append(df)
+
+        current_progress += 25
+        progress_bar.progress(current_progress)
+    
+    status_text.text("Web Scrapping Successfully")
 
     return df_list
 
